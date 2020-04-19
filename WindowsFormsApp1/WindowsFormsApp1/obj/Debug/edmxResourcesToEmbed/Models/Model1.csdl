@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="UsersDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Fullname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="Password" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="IsAdmin" Type="Boolean" Nullable="false" />
+    <Property Name="IsActivated" Type="Boolean" Nullable="false" />
+    <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityContainer Name="UsersDbEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <EntitySet Name="Medicines" EntityType="UsersDbModel.Medicine" />
+    <EntitySet Name="MedicineTypes" EntityType="UsersDbModel.MedicineType" />
+    <AssociationSet Name="FK__Medicines__TypeI__6754599E" Association="UsersDbModel.FK__Medicines__TypeI__6754599E">
+      <End Role="MedicineType" EntitySet="MedicineTypes" />
+      <End Role="Medicine" EntitySet="Medicines" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Medicine">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Price" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
+    <Property Name="Quantity" Type="Int32" Nullable="false" />
+    <Property Name="Deleted" Type="Boolean" Nullable="false" />
+    <Property Name="TypeId" Type="Int32" />
+    <NavigationProperty Name="MedicineType" Relationship="UsersDbModel.FK__Medicines__TypeI__6754599E" FromRole="Medicine" ToRole="MedicineType" />
+  </EntityType>
+  <EntityType Name="MedicineType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="typeName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="Deleted" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Medicines" Relationship="UsersDbModel.FK__Medicines__TypeI__6754599E" FromRole="MedicineType" ToRole="Medicine" />
+  </EntityType>
+  <Association Name="FK__Medicines__TypeI__6754599E">
+    <End Type="UsersDbModel.MedicineType" Role="MedicineType" Multiplicity="0..1" />
+    <End Type="UsersDbModel.Medicine" Role="Medicine" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MedicineType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Medicine">
+        <PropertyRef Name="TypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
